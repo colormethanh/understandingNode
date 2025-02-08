@@ -85,21 +85,53 @@ const fs = require("fs/promises");
   // 1a => 0001 1010
 
   const stream = fileHandler.createWriteStream();
-  console.log(stream.writableHighWaterMark); 
-  console.log(stream.writableLength);
-  const buff = Buffer.alloc(16383, 10);
-  console.log(stream.write(buff))
-  console.log(stream.write(Buffer.alloc(1, "a")));
-
-  stream.on("drain", () => {
-    console.log("We are now safe to write more!")
-  })
-  setInterval(() => {}, 1000)
+  // console.log(stream.writableHighWaterMark); 
+  // console.log(stream.writableLength);
+  // const buff = Buffer.alloc(16383, 10);
+  // console.log(stream.write(buff))
+  // console.log(stream.write(Buffer.alloc(1, "a")));
+  
+  // this creates an infinite loop
+  // stream.on("drain", () => {
+  //   console.log(stream.write(Buffer.alloc(16384, "a")))
+  //   console.log(stream.writableLength);
+  //   console.log("We are now safe to write more!")
+  // });
+  // setInterval(() => {}, 1000)
   // stream.write(buff)
-  // for (let i = 0; i < 1000000; i ++) {
-  //   const buff = Buffer.from(`${i} `, 'utf-8')
-  //   stream.write(buff);
-  // }
-  console.timeEnd("writeMany")
-  // fileHandler.close();
+
+  let i = 0;
+
+
+  const writeMany = () => {
+    while (i < 1000000) {
+      const buff = Buffer.from( ` ${i} `);
+      
+      if (i === 999999){
+        return stream.end(buff);
+      }
+
+      // IF stream.write returns false stop loop
+      if (!stream.write(buff)){
+        i++;
+        break;
+      };
+      i++
+    }
+    return;
+  }
+  writeMany();
+  
+  // Resume our loop once we are done draining
+  stream.on("drain", () => {
+    // console.log("drained")
+    writeMany();
+  });
+  
+  // When we are finished writing, we will close the file and end timer
+  stream.on("finish", () => {
+    fileHandler.close();
+    console.timeEnd("writeMany");
+  })
+
 })();
