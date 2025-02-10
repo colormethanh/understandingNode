@@ -101,13 +101,13 @@ const fs = require("fs/promises");
   // stream.write(buff)
 
   let i = 0;
-
+  const numberOfWrites = 100000
 
   const writeMany = () => {
-    while (i < 1000000) {
+    while (i < numberOfWrites) {
       const buff = Buffer.from( ` ${i} `);
       
-      if (i === 999999){
+      if (i ===  numberOfWrites - 1){
         return stream.end(buff);
       }
 
