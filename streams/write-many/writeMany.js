@@ -76,7 +76,7 @@ const fs = require("fs/promises");
 
 (async () => {
   console.time("writeMany")
-  const fileHandler =  await fs.open("random.txt", "w");
+  const fileHandler =  await fs.open("text.txt", "w");
   
   // 8 bits = 1 byte
   // 1000 bytes = 1 kilobyte
@@ -101,7 +101,7 @@ const fs = require("fs/promises");
   // stream.write(buff)
 
   let i = 0;
-  const numberOfWrites = 100000
+  const numberOfWrites = 100000000
 
   const writeMany = () => {
     while (i < numberOfWrites) {
