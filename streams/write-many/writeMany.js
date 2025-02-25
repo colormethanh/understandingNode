@@ -101,7 +101,7 @@ const fs = require("fs/promises");
   // stream.write(buff)
 
   let i = 0;
-  const numberOfWrites = 100000000
+  const numberOfWrites = 1000000
 
   const writeMany = () => {
     while (i < numberOfWrites) {
